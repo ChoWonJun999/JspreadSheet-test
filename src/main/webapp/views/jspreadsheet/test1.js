@@ -28,7 +28,7 @@ var data = [
         remark: "비고1"
     },
     {
-        category: "건축 > 공통가설공사", item: "공사용 가설전기 설치", specification: "분전반+강재전선관+배선", unit: "개소", revision: "최초",
+        category: "", item: "공사용 가설전기 설치", specification: "분전반+강재전선관+배선", unit: "개소", revision: "최초",
         contract_quantity: 200, contract_material_unit: 400, contract_labor_unit: 300, contract_equipment_unit: 50,
         plan_quantity: 190, plan_material_unit: 420, plan_labor_unit: 310, plan_equipment_unit: 55,
         execution_quantity: 180, execution_material_unit: 410, execution_labor_unit: 290, execution_equipment_unit: 45,
@@ -40,7 +40,7 @@ var data = [
         remark: "비고2"
     },
     {
-        category: "소계", item: "소계", contract_quantity: "=SUM(F4:F6)", contract_material_unit: "=SUM(G4:G6)"
+        category: "소계", contract_quantity: "=F4+F5", contract_material_unit: "=G4+G5"
     },
     {
         category: "건축 > 가설공사", item: "시스템동바리 설치 및 해체", specification: "H=10m이하, 3개월", unit: "M3", revision: "최초",
@@ -55,7 +55,7 @@ var data = [
         remark: "비고3"
     },
     {
-        category: "소계", item: "소계", contract_quantity: "=SUM(F7:F7)", contract_material_unit: "=SUM(G7:G7)"
+        category: "소계", contract_quantity: "=F7", contract_material_unit: "=G7"
     },
     {
         category: "간접비", item: "작업설 부산물", specification: "단가의", unit: "100%", revision: "최초",
@@ -66,7 +66,7 @@ var data = [
         remark: "비고3"
     },
     {
-        category: "간접비", item: "건설하도급대금지급보증서(수수료)", specification: "(직.재-부산물+직.노+산출경비) 의", unit: "0.02%", revision: "최초",
+        category: "", item: "건설하도급대금지급보증서(수수료)", specification: "(직.재-부산물+직.노+산출경비) 의", unit: "0.02%", revision: "최초",
         contract_equipment_unit: 50,
         plan_equipment_unit: 55,
         execution_equipment_unit: 45,
@@ -74,10 +74,10 @@ var data = [
         remark: "비고3"
     },
     {
-        category: "소계", item: "소계", contract_quantity: "=SUM(F9:F10)", contract_material_unit: "=SUM(G9:G10)"
+        category: "소계", contract_quantity: "=F9+F10", contract_material_unit: "=G9+G10"
     },
     {
-        category: "합계", item: "합계", contract_quantity: "=F6+F7+F9", contract_material_unit: "=G6+G7+G9"
+        category: "합계", contract_quantity: "=F6+F7+F9", contract_material_unit: "=G6+G7+G9"
     },
 ];
 
@@ -118,11 +118,11 @@ var mergeCells = {
     AN2: [2, 1],
 
     // 소계
-    B6: [3, 1],
-    B8: [3, 1],
-    B11: [3, 1],
+    A6: [4, 1],
+    A8: [4, 1],
+    A11: [4, 1],
     // 합계
-    B12: [3, 1],
+    A12: [4, 1],
 }
 
 var cells = {};
@@ -154,7 +154,7 @@ jspreadsheet(document.getElementById('spreadsheet'), {
         mergeCells: mergeCells,
         cells: cells,
         columns: [
-            { name: 'category', type: 'dropdown', width: '200px', source: ['건축 > 공통가설공사', '건축 > 가설공사', '간접비'] },
+            { name: 'category', width: '200px', readonly: true },
             { name: 'item', width: '340px' },
             { name: 'specification', width: '220px' },
             { name: 'unit', width: '65px' },
