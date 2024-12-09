@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="api">
+<select id="selectAllData" resultType="map">
+    SELECT
+        id
+        , category
+        , item
+        , specification
+        , unit
+        , revision_cnt
+        , IF(revision_cnt = 0, '최초', CONCAT(revision_cnt, '차변경')) revision
+        , contract_quantity
+        , contract_material_unit
+        , contract_labor_unit
+        , contract_equipment_unit
+        , plan_quantity
+        , plan_material_unit
+        , plan_labor_unit
+        , plan_equipment_unit
+        , execution_quantity
+        , execution_material_unit
+        , execution_labor_unit
+        , execution_equipment_unit
+        , adjustment_quantity
+        , adjustment_material_unit
+        , adjustment_labor_unit
+        , adjustment_equipment_unit
+        , contract_material_total
+        , contract_labor_total
+        , contract_equipment_total
+        , contract_total_unit
+        , contract_total_total
+        , plan_material_total
+        , plan_labor_total
+        , plan_equipment_total
+        , plan_total_unit
+        , plan_total_total
+        , execution_material_total
+        , execution_labor_total
+        , execution_equipment_total
+        , execution_total_unit
+        , execution_total_total
+        , adjustment_material_total
+        , adjustment_labor_total
+        , adjustment_equipment_total
+        , adjustment_total_unit
+        , adjustment_total_total
+        <!-- , CONCAT('=F', `row`, '*G', `row`) contract_material_total
+        , CONCAT('=F', `row`, '*I', `row`) contract_labor_total
+        , CONCAT('=F', `row`, '*K', `row`) contract_equipment_total
+        , CONCAT('=G', `row`, '+I', `row`, '+K', `row`) contract_total_unit
+        , CONCAT('=H', `row`, '+J', `row`, '+L', `row`) contract_total_total
+        , CONCAT('=O', `row`, '*P', `row`) plan_material_total
+        , CONCAT('=O', `row`, '*R', `row`) plan_labor_total
+        , CONCAT('=O', `row`, '*T', `row`) plan_equipment_total
+        , CONCAT('=P', `row`, '+R', `row`, '+T', `row`) plan_total_unit
+        , CONCAT('=Q', `row`, '+S', `row`, '+U', `row`) plan_total_total
+        , CONCAT('=X', `row`, '*Y', `row`) execution_material_total
+        , CONCAT('=X', `row`, '*AA', `row`) execution_labor_total
+        , CONCAT('=X', `row`, '*AC', `row`) execution_equipment_total
+        , CONCAT('=Y', `row`, '+AA', `row`, '+AC', `row`) execution_total_unit
+        , CONCAT('=Z', `row`, '+AB', `row`, '+AD', `row`) execution_total_total
+        , CONCAT('=AG', `row`, '*AH', `row`) adjustment_material_total
+        , CONCAT('=AG', `row`, '*AJ', `row`) adjustment_labor_total
+        , CONCAT('=AG', `row`, '*AL', `row`) adjustment_equipment_total
+        , CONCAT('=AH', `row`, '+AJ', `row`, '+AL', `row`) adjustment_total_unit
+        , CONCAT('=AI', `row`, '+AK', `row`, '+AM', `row`) adjustment_total_total -->
+        , remark
+        , `row`
+    FROM construction_data
+    ORDER BY `row` 
+</select>
+</mapper>
