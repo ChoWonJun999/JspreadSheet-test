@@ -2,6 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="api">
+<select id="selectInitData" resultType="map">
+    SELECT
+        id
+        , category
+        , item
+        , specification
+        , unit
+        , revision_cnt
+        , IF(revision_cnt = 0, '최초', CONCAT(revision_cnt, '차변경')) revision
+        , contract_quantity
+        , contract_material_unit
+        , contract_labor_unit
+        , contract_equipment_unit
+        , plan_quantity
+        , plan_material_unit
+        , plan_labor_unit
+        , plan_equipment_unit
+        , execution_quantity
+        , execution_material_unit
+        , execution_labor_unit
+        , execution_equipment_unit
+        , adjustment_quantity
+        , adjustment_material_unit
+        , adjustment_labor_unit
+        , adjustment_equipment_unit
+        , contract_material_total
+        , contract_labor_total
+        , contract_equipment_total
+        , contract_total_unit
+        , contract_total_total
+        , plan_material_total
+        , plan_labor_total
+        , plan_equipment_total
+        , plan_total_unit
+        , plan_total_total
+        , execution_material_total
+        , execution_labor_total
+        , execution_equipment_total
+        , execution_total_unit
+        , execution_total_total
+        , adjustment_material_total
+        , adjustment_labor_total
+        , adjustment_equipment_total
+        , adjustment_total_unit
+        , adjustment_total_total
+        , remark
+        , `row`
+    FROM init_construction
+    ORDER BY `row` 
+</select>
 <select id="selectAllData" resultType="map">
     SELECT
         id
@@ -69,7 +119,104 @@
         , CONCAT('=AI', `row`, '+AK', `row`, '+AM', `row`) adjustment_total_total -->
         , remark
         , `row`
-    FROM construction_data
+    <!-- FROM construction_data -->
+    FROM construction
     ORDER BY `row` 
 </select>
+
+<insert id="insertData" parameterType="map">
+<!-- INSERT INTO construction ( -->
+INSERT INTO init_construction (
+    category
+    , item
+    , specification
+    , unit
+    , revision_cnt
+    , revision
+    , contract_quantity
+    , contract_material_unit
+    , contract_labor_unit
+    , contract_equipment_unit
+    , plan_quantity
+    , plan_material_unit
+    , plan_labor_unit
+    , plan_equipment_unit
+    , execution_quantity
+    , execution_material_unit
+    , execution_labor_unit
+    , execution_equipment_unit
+    , adjustment_quantity
+    , adjustment_material_unit
+    , adjustment_labor_unit
+    , adjustment_equipment_unit
+    , contract_material_total
+    , contract_labor_total
+    , contract_equipment_total
+    , contract_total_unit
+    , contract_total_total
+    , plan_material_total
+    , plan_labor_total
+    , plan_equipment_total
+    , plan_total_unit
+    , plan_total_total
+    , execution_material_total
+    , execution_labor_total
+    , execution_equipment_total
+    , execution_total_unit
+    , execution_total_total
+    , adjustment_material_total
+    , adjustment_labor_total
+    , adjustment_equipment_total
+    , adjustment_total_unit
+    , adjustment_total_total
+    , remark
+    , `row`
+)VALUES(
+    #{category}
+    , #{item}
+    , #{specification}
+    , #{unit}
+    , #{revision_cnt}
+    , #{revision}
+    , #{contract_quantity}
+    , #{contract_material_unit}
+    , #{contract_labor_unit}
+    , #{contract_equipment_unit}
+    , #{plan_quantity}
+    , #{plan_material_unit}
+    , #{plan_labor_unit}
+    , #{plan_equipment_unit}
+    , #{execution_quantity}
+    , #{execution_material_unit}
+    , #{execution_labor_unit}
+    , #{execution_equipment_unit}
+    , #{adjustment_quantity}
+    , #{adjustment_material_unit}
+    , #{adjustment_labor_unit}
+    , #{adjustment_equipment_unit}
+    , #{contract_material_total}
+    , #{contract_labor_total}
+    , #{contract_equipment_total}
+    , #{contract_total_unit}
+    , #{contract_total_total}
+    , #{plan_material_total}
+    , #{plan_labor_total}
+    , #{plan_equipment_total}
+    , #{plan_total_unit}
+    , #{plan_total_total}
+    , #{execution_material_total}
+    , #{execution_labor_total}
+    , #{execution_equipment_total}
+    , #{execution_total_unit}
+    , #{execution_total_total}
+    , #{adjustment_material_total}
+    , #{adjustment_labor_total}
+    , #{adjustment_equipment_total}
+    , #{adjustment_total_unit}
+    , #{adjustment_total_total}
+    , #{remark}
+    , #{row}
+)
+</insert>
+
 </mapper>

@@ -1517,24 +1517,95 @@ var data = [
   },
 ];
 
-// const path = 'http://localhost:8080/api/';
-// async function fetchData() {
-//   try {
-//     const response = await fetch(`${path}data`);
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
-//     }
+var mergeCells = {
+  A1: [1, 3],
+  B1: [1, 3],
+  C1: [1, 3],
+  D1: [1, 3],
+  E1: [1, 3],
+  F1: [9, 1],
+  O1: [9, 1],
+  X1: [9, 1],
+  AG1: [9, 1],
+  AP1: [1, 3],
 
-//     const jsonData = await response.json();
-//     // console.log(jsonData);
+  F2: [1, 2],
+  G2: [2, 1],
+  I2: [2, 1],
+  K2: [2, 1],
+  M2: [2, 1],
 
-//     data.push(...jsonData.map((item, index) => ({ ...item, data: item, row: index + 3 })));
-//     // data.push(...jsonData);
-//     // data = jsonData;
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
+  O2: [1, 2],
+  P2: [2, 1],
+  R2: [2, 1],
+  T2: [2, 1],
+  V2: [2, 1],
 
-// fetchData();
-// console.log(data);
+  X2: [1, 2],
+  Y2: [2, 1],
+  AA2: [2, 1],
+  AC2: [2, 1],
+  AE2: [2, 1],
+
+  AG2: [1, 2],
+  AH2: [2, 1],
+  AJ2: [2, 1],
+  AL2: [2, 1],
+  AN2: [2, 1],
+};
+
+var cells = {};
+
+const columns = [];
+const startCharCode = 'A'.charCodeAt(0);
+
+// Single letters (A to Z)
+for (let i = 0; i < 26; i++) {
+  columns.push(String.fromCharCode(startCharCode + i));
+}
+
+// Double letters (AA to AP)
+for (let i = 0; i < 26; i++) {
+  for (let j = 0; j < 26; j++) {
+    const letter = String.fromCharCode(startCharCode + i) + String.fromCharCode(startCharCode + j);
+    columns.push(letter);
+    if (letter === 'AP') break;
+  }
+  if (columns[columns.length - 1] === 'AP') break;
+}
+
+for (let row = 1; row <= 3; row++) {
+  columns.forEach(col => {
+    cells[`${col}${row}`] = { readonly: true };
+  });
+}
+
+const columns_total = ['H', 'J', 'L', 'Q', 'S', 'U', 'Z', 'AB', 'AD', 'AI', 'AK', 'AM'];
+const columns_total_col = [
+  ['F', 'G'],
+  ['F', 'I'],
+  ['F', 'K'],
+  ['O', 'P'],
+  ['O', 'R'],
+  ['O', 'T'],
+  ['X', 'Y'],
+  ['X', 'AA'],
+  ['X', 'AC'],
+  ['AG', 'AH'],
+  ['AG', 'AJ'],
+  ['AG', 'AL'],
+];
+const columns_total_unit = ['M', 'V', 'AE', 'AN'];
+const columns_total_unit_col = [
+  ['G', 'I', 'K'],
+  ['P', 'R', 'T'],
+  ['Y', 'AA', 'AC'],
+  ['AH', 'AJ', 'AL'],
+];
+const columns_total_total = ['N', 'W', 'AF', 'AO'];
+const columns_total_total_col = [
+  ['H', 'J', 'L'],
+  ['Q', 'S', 'U'],
+  ['Z', 'AB', 'AD'],
+  ['AI', 'AK', 'AM'],
+];

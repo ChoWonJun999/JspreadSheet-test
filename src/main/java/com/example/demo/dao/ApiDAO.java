@@ -12,7 +12,15 @@ public class ApiDAO {
     @Autowired
     protected SqlSessionTemplate sqlSession;
 
+    public List<Map<String, Object>> selectInitData() {
+        return sqlSession.selectList("api.selectInitData");
+    }
+
     public List<Map<String, Object>> selectAllData() {
         return sqlSession.selectList("api.selectAllData");
+    }
+
+    public void insertData(Map<String, Object> param) {
+        sqlSession.insert("api.insertData", param);
     }
 }

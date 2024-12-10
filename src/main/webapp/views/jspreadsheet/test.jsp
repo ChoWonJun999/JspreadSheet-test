@@ -21,6 +21,14 @@
 
 </head>
 <style>
+    html {
+        height: 90%;
+    }
+
+    body {
+        height: 90%;
+    }
+
     .readonly {
         color: black !important;
         background: #f0f0f0 !important;
@@ -34,6 +42,14 @@
 
     .spreadsheet {
         font-size: 12px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .jtabs-content,
+    .jss_worksheet,
+    .jss_content {
+        height: 100% !important;
     }
 </style>
 
@@ -44,7 +60,8 @@
     </div>
     <div>
         <input type="button" onclick="add();" value="공종추가" />
-        <input type="button" onclick="change();" value="설계변경" />
+        <!-- <input type="button" onclick="change();" value="설계변경" /> -->
+        <input type="button" onclick="save();" value="저장" />
     </div>
     <div id='spreadsheet' class="spreadsheet"></div>
     <script>
@@ -54,7 +71,8 @@
     <script type="text/javascript" src="../views/jspreadsheet/data.js"></script>
     <!-- <script type="text/javascript" src="../views/jspreadsheet/test.js"></script> -->
     <!-- <script type="text/javascript" src="../views/jspreadsheet/test1.js"></script> -->
-    <script type="text/javascript" src="../views/jspreadsheet/test2.js"></script>
+    <!-- <script type="text/javascript" src="../views/jspreadsheet/test2.js"></script> -->
+    <script type="text/javascript" src="../views/jspreadsheet/test3.js"></script>
 </body>
 
 </html>

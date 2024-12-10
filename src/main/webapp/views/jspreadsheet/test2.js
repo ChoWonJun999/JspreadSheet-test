@@ -1,5 +1,7 @@
 var worksheets;
-var currentRevision = 1;
+var worksheet;
+var currentRevisionCnt = 0;
+var currentRevision = currentRevisionCnt == 0 ? '최초' : `${currentRevisionCnt}차변경`;
 
 const path = 'http://localhost:8080/api/';
 async function fetchData() {
@@ -146,7 +148,7 @@ function sheet() {
     ],
   });
 
-  var temp = worksheets[0];
+  worksheet = worksheets[0];
 
   data.forEach((item, index) => {
     if (item.category === '간접비') {
@@ -158,23 +160,23 @@ function sheet() {
             item.item === '재료시험비' ||
             item.item === '폐기물처리비')
         ) {
-          temp.setReadOnly(`${col}${index + 1}`, false);
+          worksheet.setReadOnly(`${col}${index + 1}`, false);
         } else {
-          temp.setReadOnly(`${col}${index + 1}`, true);
+          worksheet.setReadOnly(`${col}${index + 1}`, true);
         }
       });
     }
 
     if (item.category === '소계' || item.category === '합계') {
-      temp.setMerge(`A${index + 1}`, 4, 1);
+      worksheet.setMerge(`A${index + 1}`, 4, 1);
       columns.forEach(col => {
-        temp.setReadOnly(`${col}${index + 1}`, true);
+        worksheet.setReadOnly(`${col}${index + 1}`, true);
       });
     }
 
-    if (item.revision != `${currentRevision}차변경`) {
+    if (item.revision != `${currentRevision}`) {
       columns.forEach(col => {
-        temp.setReadOnly(`${col}${index + 1}`, true);
+        worksheet.setReadOnly(`${col}${index + 1}`, true);
       });
     }
   });
@@ -187,9 +189,9 @@ function add() {}
 function change() {
   var chk = 1;
   var step = 4;
-  var worksheet = worksheets[0];
+  worksheet = worksheets[0];
   worksheet.getData().forEach((item, index) => {
-    if (item.revision === `${currentRevision}차변경`) {
+    if (item.revision === `${currentRevision}`) {
       worksheet.insertRow(1, index + chk, true);
 
       setCellData('readonlyBasic', 'A', index + chk + 1, item.category, '', '', '', '');
@@ -197,7 +199,7 @@ function change() {
       setCellData('basic', 'C', index + chk + 1, item.specification, '', '', '', '');
       setCellData('basic', 'D', index + chk + 1, item.unit, '', '', '', '');
 
-      setCellData('readonlyBasic', 'E', index + chk + 1, `${currentRevision + 1}차변경`, '', '', '', '');
+      setCellData('readonlyBasic', 'E', index + chk + 1, `${currentRevisionCnt + 1}차변경`, '', '', '', '');
       switch (item.category) {
         case '소계':
           setCellData('subTotal', 'F', index + chk + 1, '', '', '', '', step);
@@ -332,7 +334,7 @@ function change() {
                   item.item === '운반비' ||
                   item.item === '재료시험비' ||
                   item.item === '폐기물처리비') &&
-                item.revision === `${currentRevision}차변경`
+                item.revision === `${currentRevision}`
               ) {
                 worksheet.setReadOnly(`${col}${index + chk + 1}`, false);
               } else {
@@ -349,39 +351,45 @@ function change() {
       chk++;
     }
   });
-  currentRevision++;
+  currentRevisionCnt++;
+  currentRevision = `${currentRevisionCnt}차변경`;
 }
 
 // 설계변경으로 인한 행 추가 데이터 셋팅
 function setCellData(type, row, col, val, num1, num2, num3, step) {
   if (type != 'basic') {
-    worksheets[0].setReadOnly(`${row}${col}`, false);
+    worksheet.setReadOnly(`${row}${col}`, false);
   }
 
   switch (type) {
     case 'mul':
-      worksheets[0].setValue(`${row}${col}`, `=${num1}${col}*${num2}${col}`);
+      worksheet.setValue(`${row}${col}`, `=${num1}${col}*${num2}${col}`);
       break;
     case 'sum':
-      worksheets[0].setValue(`${row}${col}`, `=${num1}${col}+${num2}${col}+${num3}${col}`);
+      worksheet.setValue(`${row}${col}`, `=${num1}${col}+${num2}${col}+${num3}${col}`);
       break;
     case 'subTotal':
-      worksheets[0].setValue(
+      worksheet.setValue(
         `${row}${col}`,
-        `=SUMIF(E${step}:E${col}, "${currentRevision + 1}차변경", ${row}${step}:${row}${col})`
+        `=SUMIF(E${step}:E${col}, "${currentRevisionCnt + 1}차변경", ${row}${step}:${row}${col})`
       );
       break;
     case 'total':
-      worksheets[0].setValue(
+      worksheet.setValue(
         `${row}${col}`,
-        `=SUMIFS(${row}4:${row}${col}, A4:A${col}, '소계', E4:E${col}, "${currentRevision + 1}차변경")`
+        `=SUMIFS(${row}4:${row}${col}, A4:A${col}, '소계', E4:E${col}, "${currentRevisionCnt + 1}차변경")`
       );
       break;
     default:
-      worksheets[0].setValue(`${row}${col}`, val);
+      worksheet.setValue(`${row}${col}`, val);
   }
 
   if (type != 'basic' && type != 'totalSum' && type != 'total') {
-    worksheets[0].setReadOnly(`${row}${col}`, true);
+    worksheet.setReadOnly(`${row}${col}`, true);
   }
+}
+
+// 저장
+function save() {
+  console.log(worksheets[0].getData());
 }
