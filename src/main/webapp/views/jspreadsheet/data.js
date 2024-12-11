@@ -1457,7 +1457,7 @@ var data = [
     plan_quantity: '실행예정',
     execution_quantity: '시행내역',
     adjustment_quantity: '정산내역',
-    remark: '비고1',
+    remark: '비고',
   },
   {
     contract_quantity: '수량',
@@ -1479,7 +1479,7 @@ var data = [
     adjustment_material_unit: '직접재료비',
     adjustment_labor_unit: '직접노무비',
     adjustment_equipment_unit: '기계경비',
-    adjustemnt_total_unit: '합계',
+    adjustment_total_unit: '합계',
   },
   {
     contract_material_unit: '단가',

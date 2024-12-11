@@ -59,8 +59,7 @@
         <input type="button" onclick="history.back()" value="뒤로가기" />
     </div>
     <div>
-        <input type="button" onclick="add();" value="공종추가" />
-        <!-- <input type="button" onclick="change();" value="설계변경" /> -->
+        <input type="button" onclick="addType();" value="공종추가" />
         <input type="button" onclick="save();" value="저장" />
     </div>
     <div id='spreadsheet' class="spreadsheet"></div>

@@ -125,8 +125,8 @@
 </select>
 
 <insert id="insertData" parameterType="map">
-<!-- INSERT INTO construction ( -->
-INSERT INTO init_construction (
+INSERT INTO construction (
+<!-- INSERT INTO init_construction ( -->
     category
     , item
     , specification
