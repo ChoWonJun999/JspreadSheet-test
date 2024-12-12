@@ -1552,6 +1552,8 @@ var mergeCells = {
   AJ2: [2, 1],
   AL2: [2, 1],
   AN2: [2, 1],
+
+  A4: [1, 18],
 };
 
 var cells = {};

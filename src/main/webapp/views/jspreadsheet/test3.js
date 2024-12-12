@@ -15,8 +15,8 @@ async function fetchData() {
     const jsonData = await response.json();
 
     currentRevisionCnt = jsonData.currentRevisionCnt;
-    currentRevisionCnt = 1;
-    currentRevisionCnt = 2;
+    // currentRevisionCnt = 1;
+    // currentRevisionCnt = 2;
     // currentRevisionCnt = 3;
     currentRevision = currentRevisionCnt == 0 ? '최초' : `${currentRevisionCnt}차변경`;
     data.push(...jsonData.data);
@@ -113,20 +113,7 @@ function sheet() {
       },
     ],
     contextMenu: function (o, x, y, e, i, section) {
-      console.log(section);
-      // if (
-      // y < 3
-      //  ||  o.getValue(`A${y + 1}`) === '간접비' ||
-      // o.getValue(`A${y + 1}`) === '소계' ||
-      // o.getValue(`A${y + 1}`) === '직접비소계' ||
-      // o.getValue(`A${y + 1}`) === '간접비소계' ||
-      // o.getValue(`A${y + 1}`) === '합계' ||
-      // o.getValue(`A${y + 1}`) === '부가가치세' ||
-      // o.getValue(`A${y + 1}`) === '세금' ||
-      // o.getValue(`A${y + 1}`) === '총합계'
-      // )
-      //   return [];
-
+      // console.log(x, y);
       let items = [];
 
       if (section == 'select-all') {
@@ -192,10 +179,10 @@ function sheet() {
 
         if (
           srs.every(
-            item => o.getValue(`A${item + 1}`) !== '간접비' && isVisibleTotalData(o.getValue(`A${item + 1}`), '!=&&')
+            item => o.isMerged(0, item).v !== '간접비' && isVisibleTotalData(o.getValue(`A${item + 1}`), '!=&&')
           )
         ) {
-          if (o.getValue(`B${y + 1}`) != '소계') {
+          if (o.getValue(`B${y + 1}`) != '소계' && y > 2) {
             items.push({
               title: jSuites.translate('품목추가'),
               icon: 'add',
@@ -224,13 +211,14 @@ function sheet() {
             });
           }
         }
-
-        items.push({
-          title: jSuites.translate('숨기기'),
-          onclick: function () {
-            o.hideRow(o.getSelectedRows());
-          },
-        });
+        if ((o.isMerged(0, y).y === y && x === 0) || o.isMerged(0, y).mergeCells[1] === 1 || o.isMerged(0, y).y != y) {
+          items.push({
+            title: jSuites.translate('숨기기'),
+            onclick: function () {
+              o.hideRow(o.getSelectedRows());
+            },
+          });
+        }
 
         items.push({
           title: jSuites.translate('보이기'),
@@ -241,11 +229,10 @@ function sheet() {
 
         if (
           srs.every(
-            item =>
-              o.getValue(`B${item + 1}`) != '소계' &&
-              o.getValue(`A${item + 1}`) !== '간접비' &&
-              isVisibleTotalData(o.getValue(`A${item + 1}`), '!=&&')
-          )
+            item => o.isMerged(0, item).v !== '간접비' && isVisibleTotalData(o.getValue(`A${item + 1}`), '!=&&')
+          ) &&
+          o.getValue(`B${y + 1}`) != '소계' &&
+          ((o.isMerged(0, y).y === y && x === 0) || o.isMerged(0, y).mergeCells[1] === 1 || o.isMerged(0, y).y != y)
         ) {
           items.push({
             title: jSuites.translate('삭제'),
@@ -261,9 +248,22 @@ function sheet() {
   });
 
   worksheet = worksheets[0];
+  worksheet.getData().forEach((item, index) => {
+    if (isVisibleTotalData(item.category, '==||')) {
+      worksheet.setMerge(`A${index + 1}`, 4, 1);
+      columns.forEach(col => {
+        worksheet.setReadOnly(`${col}${index + 1}`, true);
+      });
+    }
 
-  data.forEach((item, index) => {
-    if (item.category === '간접비') {
+    if (item.revision != `${currentRevision}`) {
+      columns.forEach(col => {
+        worksheet.setReadOnly(`${col}${index + 1}`, true);
+      });
+    }
+
+    var isMerged = worksheet.isMerged(0, index);
+    if (isMerged !== false && isMerged.v === '간접비') {
       columns.forEach(col => {
         if (
           (col === 'M' || col === 'V' || col === 'AE' || col === 'AN') &&
@@ -276,19 +276,6 @@ function sheet() {
         } else {
           worksheet.setReadOnly(`${col}${index + 1}`, true);
         }
-      });
-    }
-
-    if (isVisibleTotalData(item.category, '==||')) {
-      worksheet.setMerge(`A${index + 1}`, 4, 1);
-      columns.forEach(col => {
-        worksheet.setReadOnly(`${col}${index + 1}`, true);
-      });
-    }
-
-    if (item.revision != `${currentRevision}`) {
-      columns.forEach(col => {
-        worksheet.setReadOnly(`${col}${index + 1}`, true);
       });
     }
   });
@@ -326,7 +313,7 @@ function isVisibleTotalData(val, type) {
 function addType(startIdx = 3) {
   startIdx++;
   var category = '공통가설공사';
-  var itemCnt = 3;
+  var itemCnt = 10;
   worksheet = worksheets[0];
 
   worksheet.insertRow((itemCnt + 1) * (currentRevisionCnt + 1), startIdx - 1, true);
@@ -337,16 +324,21 @@ function addType(startIdx = 3) {
     addItem(startIdx + i * (currentRevisionCnt + 1));
   }
 
-  worksheet.setMerge(`B${startIdx + 3 * (currentRevisionCnt + 1)}`, 3, 1 * (currentRevisionCnt + 1));
-  setCellData('readonlyBasic', 'B', startIdx + 3 + 3 * currentRevisionCnt, '소계');
+  worksheet.setMerge(`B${startIdx + itemCnt * (currentRevisionCnt + 1)}`, 3, 1 * (currentRevisionCnt + 1));
+  setCellData('readonlyBasic', 'B', startIdx + itemCnt * (currentRevisionCnt + 1), '소계');
   // 소계
   for (var j = 0; j <= currentRevisionCnt; j++) {
-    setCellData('readonlyBasic', 'E', `${startIdx + 3 + 3 * currentRevisionCnt + j}`, j == 0 ? '최초' : `${j}차변경`);
+    setCellData(
+      'readonlyBasic',
+      'E',
+      startIdx + itemCnt * (currentRevisionCnt + 1) + j,
+      j == 0 ? '최초' : `${j}차변경`
+    );
     for (var i = 5; i < columns.length - 1; i++) {
       setCellData(
         'subTotal',
         columns[i],
-        startIdx + 3 + 3 * currentRevisionCnt + j,
+        startIdx + itemCnt * (currentRevisionCnt + 1) + j,
         '',
         '',
         '',
@@ -355,7 +347,7 @@ function addType(startIdx = 3) {
         j == 0 ? '최초' : `${j}차변경`
       );
     }
-    worksheet.setReadOnly(`AP${startIdx + 3 + 3 * currentRevisionCnt + j}`, true);
+    worksheet.setReadOnly(`AP${startIdx + itemCnt * (currentRevisionCnt + 1) + j}`, true);
   }
 }
 
@@ -389,7 +381,7 @@ function addItem(startIdx) {
       setCellData('sum', columns_total_total[j], i, '', ...columns_total_total_col[j], '', '');
     // 수량
     setCellData('equal', 'O', i, '', 'F');
-    setCellData('equal', 'X', i, '', 'O');
+    setCellData('basic', 'X', i, '', 'O');
     setCellData('equal', 'AG', i, '', 'X');
     worksheet.setReadOnly(`AG${i}`, false);
     // 이전 변경 차수 readonly
